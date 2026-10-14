@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "定时静默开关网页 · 自动刷新与日志",
   "short_name": "开关网页与刷新",
-  "version": "3.0.1",
+  "version": "1.0.0",
   "description": "两套独立定时任务：静默打开网址并延时关闭；定时刷新指定标签页或窗口的所有网页。可查看和隐藏执行日志。",
   "minimum_chrome_version": "120",
   "permissions": [
