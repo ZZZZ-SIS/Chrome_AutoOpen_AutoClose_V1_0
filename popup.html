@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>网页自动化控制台 · V3.0.1</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="eyebrow"><span class="hero-symbol">◷</span> SMART BROWSER TOOLS <span class="version">V3.0.1</span></div>
+    <h1>网页自动化<span>控制台</span></h1>
+    <p>后台静默打开 · 自动刷新 · 全程执行日志</p>
+    <div class="hero-tags"><span>◉ 双任务独立运行</span><span>✓ 不主动抢占焦点</span><span>▣ 本机日志</span></div>
+  </header>
+
+  <main>
+    <section class="module module-open" aria-labelledby="open-title">
+      <div class="module-header">
+        <div class="module-heading"><span class="module-icon">01</span><div><div class="module-name" id="open-title">定时打开网页 <span>· 自动关闭</span></div><div class="module-sub">可更换网址、间隔分钟数和关闭秒数</div></div></div>
+        <span class="state-pill" id="open-pill">已停止</span>
+      </div>
+      <div class="module-body">
+        <div class="overview">
+          <div><span>下次打开</span><strong id="open-next">--:--</strong></div>
+          <div><span>已运行轮次</span><strong id="open-count">0</strong></div>
+          <div><span>待关闭网页</span><strong id="open-active">0</strong></div>
+        </div>
+        <label for="urls-input" class="field-label">目标网址 <em>每行一个 · 最多 20 个</em></label>
+        <textarea id="urls-input" rows="3" placeholder="https://www.facebook.com/&#10;https://example.com" spellcheck="false"></textarea>
+        <div class="input-grid">
+          <div><label for="open-interval" class="field-label">每隔多久打开</label><div class="input-with-unit"><input id="open-interval" type="number" min="1" max="1440" step="1" inputmode="numeric"><span>分钟</span></div></div>
+          <div><label for="close-delay" class="field-label">打开后多久关闭</label><div class="input-with-unit"><input id="close-delay" type="number" min="1" max="3600" step="1" inputmode="numeric"><span>秒</span></div></div>
+        </div>
+        <details class="advanced">
+          <summary>▸ 打开方式、多个网址与重启设置</summary>
+          <div class="label-minor">打开方式</div>
+          <div class="radio-grid">
+            <label class="radio-card"><input type="radio" name="openMode" value="tab" checked><span><b>后台标签页</b><small>推荐，不切换窗口</small></span></label>
+            <label class="radio-card"><input type="radio" name="openMode" value="window"><span><b>最小化窗口</b><small>系统可能短暂闪现</small></span></label>
+          </div>
+          <div class="label-minor">有多个网址时</div>
+          <div class="radio-grid">
+            <label class="radio-card"><input type="radio" name="multiMode" value="all" checked><span><b>每轮全部打开</b><small>同时打开所有网址</small></span></label>
+            <label class="radio-card"><input type="radio" name="multiMode" value="rotate"><span><b>每轮轮流打开</b><small>每次打开一个网址</small></span></label>
+          </div>
+          <label class="check-row"><input type="checkbox" id="resume-input"><span><b>浏览器重启后继续打开任务</b><small>需要开启 Chrome；会恢复自动打开任务</small></span></label>
+        </details>
+        <div class="button-grid top-buttons">
+          <button type="button" class="btn btn-muted" id="open-save">保存设置</button>
+          <button type="button" class="btn btn-dark" id="open-once">立即打开一次</button>
+        </div>
+        <div class="button-grid"><button type="button" class="btn btn-primary" id="open-start">▶ 开始循环</button><button type="button" class="btn btn-stop" id="open-stop" disabled>■ 停止循环</button></div>
+        <div class="feedback" id="open-feedback" role="status">点击“开始循环”会立即打开首轮，随后定时执行。</div>
+      </div>
+    </section>
+
+    <section class="module module-refresh" aria-labelledby="refresh-title">
+      <div class="module-header">
+        <div class="module-heading"><span class="module-icon violet">02</span><div><div class="module-name" id="refresh-title">自动刷新网页</div><div class="module-sub">自动刷新当前浏览器窗口打开的分页</div></div></div>
+        <span class="state-pill" id="refresh-pill">已停止</span>
+      </div>
+      <div class="module-body">
+        <div class="overview alt-overview">
+          <div><span>下次刷新</span><strong id="refresh-next">--:--</strong></div>
+          <div><span>刷新轮次</span><strong id="refresh-count">0</strong></div>
+          <div><span>总刷新次数</span><strong id="refresh-total">0</strong></div>
+        </div>
+        <div class="field-label">刷新哪些网页</div>
+        <div class="scope-grid">
+          <label class="scope-card"><input type="radio" name="refreshScope" value="window" checked><span><b>当前窗口所有网页</b><small>刷新此 Chrome 窗口内的网页标签</small></span></label>
+          <label class="scope-card"><input type="radio" name="refreshScope" value="tab"><span><b>仅当前标签页</b><small>始终刷新开始时选中的标签</small></span></label>
+        </div>
+        <div class="field-label space-top">每隔多长时间刷新一次</div>
+        <div class="refresh-time-line"><div class="input-with-unit"><input id="refresh-interval" type="number" min="1" step="1" value="1" inputmode="numeric"><span>间隔</span></div><select id="refresh-unit" aria-label="刷新间隔单位"><option value="minutes">分钟</option><option value="seconds">秒</option></select></div>
+        <p class="tip">最短 30 秒；启动时固定目标窗口/标签，不会随你切换窗口而改变。开始后先等待一个间隔再刷新。刷新网页会使未保存的填写内容丢失。</p>
+        <div class="target-indicator" id="refresh-target">尚未绑定刷新目标；请在目标 Chrome 窗口中点击“开始刷新”。</div>
+        <div class="button-grid top-buttons"><button type="button" class="btn btn-muted" id="refresh-save">保存设置</button><button type="button" class="btn btn-dark" id="refresh-once">立即刷新一次</button></div>
+        <div class="button-grid"><button type="button" class="btn btn-purple" id="refresh-start">↻ 开始刷新</button><button type="button" class="btn btn-stop" id="refresh-stop" disabled>■ 停止刷新</button></div>
+        <div class="feedback" id="refresh-feedback" role="status">刷新操作不会自动切换前台窗口。</div>
+      </div>
+    </section>
+
+    <section class="module module-logs" aria-labelledby="log-title">
+      <div class="module-header log-module-head">
+        <div class="module-heading"><span class="module-icon log-icon">≡</span><div><div class="module-name" id="log-title">执行日志 <span id="log-number" class="log-count">0</span></div><div class="module-sub">打开、关闭、刷新、报错全部记录</div></div></div>
+        <button type="button" class="log-toggle" id="toggle-logs" aria-expanded="true">隐藏日志 ↑</button>
+      </div>
+      <div id="log-content" class="log-content">
+        <div class="log-actions"><select id="log-filter" aria-label="筛选日志"><option value="all">全部记录</option><option value="open">打开 / 关闭</option><option value="refresh">自动刷新</option><option value="system">系统消息</option></select><button type="button" class="clear-btn" id="clear-logs">清空日志</button></div>
+        <div class="log-list" id="log-list" aria-live="polite"><div class="log-empty">暂无执行记录。</div></div>
+        <p class="log-footnote">最多保留最近 500 条，本机存储；新日志隐藏网址参数与网页标题。隐藏后继续记录。</p>
+      </div>
+    </section>
+
+    <p class="bottom-note">提示：两个任务可以同时运行，互不影响。临时网页只会关闭插件自己创建的标签。Chrome 需保持运行；浏览器休眠或限制后台任务时可能产生计时误差。</p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

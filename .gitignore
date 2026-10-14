@@ -1,0 +1,13 @@
+# Local credentials, environment configuration and Chrome signing keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crx
+# Local build outputs and downloaded dependencies
+node_modules/
+dist/
+coverage/
